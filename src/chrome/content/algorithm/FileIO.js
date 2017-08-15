@@ -137,7 +137,7 @@ function message(text, priority) {
     if (shouldLogMessagePriority(priority)) {
         // append the text to the end of the output file
         //FileIO.writeFile("bluejay_output.txt", text, 1);
-        messageToWrite += text;
+        messageToWrite += "" + Date.now() + ": " + text;
     }
 };
 

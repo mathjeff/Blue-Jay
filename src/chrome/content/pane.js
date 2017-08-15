@@ -184,7 +184,8 @@ Bluejay.PaneController = {
     
     // this function gets called when the user changes which songs are selected
     selectionChanged : function() {
-        message("currently selected track changed\r\n");
+        message("currently selected track changed\r\n", 2);
+        flushMessage();
         this.didSelectionChange = true;
     },
     // assigns a certain rating to the currently-playing song
@@ -402,7 +403,8 @@ Bluejay.PaneController = {
         // get the data for the new track
         var mediaItem = ev.data;
         var songName = mediaItem.getProperty(SBProperties.trackName)
-        message("song changed; new name = " + songName + "\r\n");
+        message("song changed; new name = " + songName + "\r\n", 2);
+        flushMessage();
 
         // save data for later
         var songEndDate = new DateTime();
@@ -424,13 +426,14 @@ Bluejay.PaneController = {
     // this function gets called whenever the song is changed by Songbird or by the user, but not when we change it
     // oldMediaItem is the previous song that was playing for even a fraction of a moment
     outsideSourceChangedSong: function(oldMediaItem, newMediaItem, startDate, endDate) {
-        message("outside source changed song\r\n");
+        message("outside source changed song\r\n", 2);
+        flushMessage();
         // reset the rating menu
         this.clearRatingMenu();
 
         // check whether we were previously playing a song
         if (oldMediaItem != null) {
-            message("outside source changed song: old name = " + oldMediaItem.getProperty(SBProperties.trackName) + "\r\n");
+            message("outside source changed song: old name = " + oldMediaItem.getProperty(SBProperties.trackName) + "\r\n", 2);
             // compute the duration it actually played
             var playedDuration = startDate.timeUntil(endDate);
             var playedName = new Name(oldMediaItem.getProperty(SBProperties.trackName));
@@ -462,7 +465,8 @@ Bluejay.PaneController = {
                 }
             }
         }
-        message("outside source changed song: new name = " + newMediaItem.getProperty(SBProperties.trackName) + "\r\n");
+        message("outside source changed song: new name = " + newMediaItem.getProperty(SBProperties.trackName) + "\r\n", 2);
+        flushMessage();
         var selectedMediaItem = this.getSelectedMediaItem();
         if ((oldMediaItem == null) && (selectedMediaItem != null)) {
             // We don't setup our selection listener until after the first song starts
@@ -519,7 +523,8 @@ Bluejay.PaneController = {
     
     // this function gets called when a song starts and we plan to play it all the way through (rather than skipping it as soon as possible, like a randomly-chosen song)
     startingSong: function(mediaItem) {
-        message("starting song: name = " + mediaItem.getProperty(SBProperties.trackName) + "\r\n");
+        message("starting song: name = " + mediaItem.getProperty(SBProperties.trackName) + "\r\n", 2);
+        flushMessage();
     
         // keep track of previous songs
         this.previousMediaItem = this.currentMediaItem;
@@ -558,7 +563,8 @@ Bluejay.PaneController = {
     },
     // changes the currently playing song to the song named songName
     changeSong: function(songName) {
-        message("setting song, name = " + songName + "\r\n");
+        message("setting song, name = " + songName + "\r\n", 2);
+        flushMessage();
         this.isSettingSong = true;
         const properties = Cc["@songbirdnest.com/Songbird/Properties/MutablePropertyArray;1"].createInstance(Ci.sbIMutablePropertyArray);
         var songnamePropertyId = SBProperties.trackName;
@@ -575,10 +581,15 @@ Bluejay.PaneController = {
             song = songEnumerator.getNext();
             var actualName = song.getProperty(songnamePropertyId);
             if (actualName == songName) {
-                gMM.sequencer.playView(songView, songView.getIndexForItem(song));
+                var index = songView.getIndexForItem(song);
+                gMM.sequencer.playView(songView, index);
+                message("setting song, name = " + songName + ", index = " + index + "\r\n", 2);
+                flushMessage();
                 return;
             }
         }
+        message("failed to find song named " + songName + "\r\n", 2);
+        flushMessage();
         
         //gMM.sequencer.playView(songView, songView.getIndexForItem(songArray.enumerate().getNext()));
     },
