@@ -577,14 +577,22 @@ Bluejay.PaneController = {
         var song;
         // unfortunately, getItemsByProperties doesn't match case
         // So, we have to go look for the item whose title is capitalized correctly
+        message("checking " + songArray.length + " songs for " + songName + "\r\n", 2);
+        flushMessage();
         for (i = 0; i < songArray.length; i++) {
+            message("enumerating song " + i + "\r\n", 2);
+            flushMessage();
             song = songEnumerator.getNext();
+            message("getting song name\r\n", 2);
+            flushMessage();
             var actualName = song.getProperty(songnamePropertyId);
             if (actualName == songName) {
+                message("getting song index for " + song + "\r\n", 2);
+                flushMessage();
                 var index = songView.getIndexForItem(song);
-                gMM.sequencer.playView(songView, index);
                 message("setting song, name = " + songName + ", index = " + index + "\r\n", 2);
                 flushMessage();
+                gMM.sequencer.playView(songView, index);
                 return;
             }
         }
