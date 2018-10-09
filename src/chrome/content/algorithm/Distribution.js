@@ -21,7 +21,7 @@
  * of floating-point numbers it stores average, spread, and count
  * (although even count may be fractional)
  */
-function Distribution(average, stdDev, relativeWidth) {
+function Distribution(average, stdDev, relativeWeight) {
 	/** public function prototypes */
 	this.getMean = getMean;
 	this.getStdDev = getStdDev;
@@ -30,7 +30,7 @@ function Distribution(average, stdDev, relativeWidth) {
 	/** private variables */
 	var mean = average;
 	var standardDeviation = stdDev;
-	var weight = relativeWidth;
+	var weight = relativeWeight;
 	
 	/** public functions */
 	

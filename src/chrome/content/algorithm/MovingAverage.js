@@ -95,7 +95,6 @@ function MovingAverage() {
     
         /** var startingIndex = other.getIndexForDate(startTime, false) + 1; */
         /** message("MovingAverage::getCorrelationsFor pt1"); */
-        var startingIndex = previousNumRatings;
         if ((otherRatings.length > 0) && (previousNumRatings < otherRatings.length)) {
             var startTime = otherRatings[previousNumRatings].getDate();
             /** find the starting index. This can
