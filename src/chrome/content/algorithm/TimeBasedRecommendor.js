@@ -211,6 +211,11 @@ function TimeBasedRecommendor() {
         var participationStartDateIndicator = new Name("StartDate");
         var participationEndDateIndicator = new Name("EndDate");
 
+        var now = new DateTime();
+        now.setNow();
+
+        var oneYearAgo = now.datePlusDuration(-1 * 60 * 60 * 24 * 365);
+
         var currentDate = new DateTime();
         var characterIndex;
         //alert("starting to parse file text");
@@ -300,17 +305,19 @@ function TimeBasedRecommendor() {
                             this.addCandidate(candidate);
                             candidate = new Candidate();
                         }
-                        if (objectName.equalTo(ratingIndicator)) {
-                            // If we get here then we just finished reading a rating
-                            // add the rating to the rating set
-                            this.putRatingInMemory(rating);
-                        
-                            rating = new Rating();
-                        }
-                        if (objectName.equalTo(participationIndicator)) {
-                            // If we get here then we just finished reading a rating
-                            this.putParticipationInMemory(participation);
-                            participation = new Participation();
+                        if (strictlyChronologicallyOrdered(oneYearAgo, currentDate)) { // only include data from the last year to avoid using too much memory
+                            if (objectName.equalTo(ratingIndicator)) {
+                                // If we get here then we just finished reading a rating
+                                // add the rating to the rating set
+                                this.putRatingInMemory(rating);
+
+                                rating = new Rating();
+                            }
+                            if (objectName.equalTo(participationIndicator)) {
+                                // If we get here then we just finished reading a rating
+                                this.putParticipationInMemory(participation);
+                                participation = new Participation();
+                            }
                         }
                     }
                     stackCount--;
