@@ -345,9 +345,12 @@ function TimeBasedRecommendor() {
                     currentChar = fileContents[characterIndex];
                 }
             }
-            if (currentChar == "\\") {
+            if (currentChar === "\\") {
                 // go to the next character and treat it as text
-                characterIndex++;
+                if (characterIndex < fileContents.length) {
+                    characterIndex++;
+                    currentChar = fileContents[characterIndex];
+                }
             }
             //message("start tag = ");
             //message(startTag.getName());
@@ -365,7 +368,7 @@ function TimeBasedRecommendor() {
         if (stackCount != 0) {
             alert("failed to parse " + fileName + "; ended at a depth of " + stackCount + ". Last recognized date in the file was " + latestDate.stringVersion()  + ". Will continue anyway, but some data will be missing.")
         }
-        message("done reading file " + fileName)
+        message("done reading file " + fileName + "; latest parsed date is " + latestDate.stringVersion() + "\n");
         //alert("done reading file " + fileName + "\r\n");
     }
     // adds a candidate (also known as a song, genre, or category)
@@ -1086,8 +1089,8 @@ function TimeBasedRecommendor() {
         var i;
         for (i = 0; i < indices.length; i++) {
             currentCandidate = candidatesByScore[indices[i]];
-            message("candidate name = " + currentCandidate.getName().getName());
-            message(" expected rating = " + currentCandidate.getCurrentRating().getMean() + "\r\n");
+            message("candidate name = " + currentCandidate.getName().getName(), 1);
+            message(" expected rating = " + currentCandidate.getCurrentRating().getMean() + "\r\n", 1);
         }
         /* // print the distributions in order
         var distributionIterator = Iterator(guesses, true);
@@ -1101,7 +1104,7 @@ function TimeBasedRecommendor() {
         }
         */
         var bestCandidate = candidatesByScore[indices[0]];
-        message("best candidate name = " + bestCandidate.getName().getName() + " expected rating = " + bestCandidate.getCurrentRating().getMean() + "\r\n", 1);
+        message("best candidate name = " + bestCandidate.getName().getName() + " expected rating = " + bestCandidate.getCurrentRating().getMean() + "\r\n", 2);
         flushMessage();
         //alert("done making recommendation. Best song name = " + bestName.getName());
         return bestCandidate;
